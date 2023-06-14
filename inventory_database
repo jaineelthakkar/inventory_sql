@@ -1,0 +1,308 @@
+
+
+create database sql_project;
+Query OK, 1 row affected (0.01 sec)
+
+use sql_project;
+Database changed
+
+ create table brand(
+    -> bid integer(5),
+    -> bname varchar(20));
+Query OK, 0 rows affected (0.01 sec)
+
+ alter table brand
+    -> add primary
+    -> key(bid);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+ create table inv_user(
+    -> user_id varchar(20),
+    -> name varchar(20),
+    -> psw varchar(20)
+    -> ,
+    -> last_login timestamp,
+    -> user_type varchar(10)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+ create table categories(
+    -> cid integer(5),
+    -> category_name varchar(20)
+    -> );
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+ alter table categories
+    -> add primary key(cid);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+alter table inv_user add primary key(user_id);
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+ create table product(
+    -> pid integer(5) primary key,
+    -> cid integer(5) references categories(cid),
+    -> bid integer(5) references brand(bid),
+    -> sid integer(5),
+    -> pname varchar(20),
+    -> p_stock integer(5),
+    -> price integer(5),
+    -> added_date date);
+Query OK, 0 rows affected, 6 warnings (0.06 sec)
+
+ create table stores(
+    -> sid integer(5),
+    -> sname varchar(20),address varchar(20),
+    -> mob_num integer(10) );
+Query OK, 0 rows affected, 2 warnings (0.01 sec)
+
+ alter table stores add primary key (sid);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+ alter table product add foreign key(sid) references stores(sid);
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+ create table provides(
+    -> bid integer(5) references brand(bid),
+    -> sid integer(5) references stores(sid),
+    -> discount integer(5));
+Query OK, 0 rows affected, 3 warnings (0.01 sec)
+
+ create table cart(
+    -> cust_id integer(5) primary key,
+    -> name varchar(20),
+    -> mob_num integer(10)
+    -> );
+Query OK, 0 rows affected, 2 warnings (0.01 sec)
+
+create table select_prod(
+    -> cust_id integer(5) references cart(cust_id),
+    -> pid integer(5) references product(pid),
+    -> quantity integer(4));
+Query OK, 0 rows affected, 3 warnings (0.02 sec)
+
+create table transaction(
+    -> id integer(5) primary key,
+    -> total_amount integer(5),
+    -> paid integer(5),
+    -> due integer(5),
+    -> gst integer(3),
+    -> discount integer(5),
+    -> method varchar(10),
+    -> cart_id integer(5) references cust_cart(cust_id)
+    -> );
+Query OK, 0 rows affected, 7 warnings (0.01 sec)
+
+create table invoice(
+    -> item_no integer(5),
+    -> prod_name varchar(20),
+    -> quatity integer(5),
+    -> net_price integer(5),
+    -> transaction_id integer(5) references transaction(id)
+    -> );
+Query OK, 0 rows affected, 4 warnings (0.01 sec)
+
+
+INSERT
+
+mysql> insert into brand values( '1', 'Alphabet');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into brand values( '2', 'Meta');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into brand values( '3', 'Apple');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into brand values( '4', 'Netflix');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into brand values( '5', 'Amazon');
+Query OK, 1 row affected (0.00 sec)
+
+Select * from brand
+    -> ;
++-----+----------+
+| bid | bname    |
++-----+----------+
+|   1 | Alphabet |
+|   2 | Meta     |
+|   3 | Apple    |
+|   4 | Netflix  |
+|   5 | Amazon   |
+|   6 | Costco   |
+|   7 | Walmart  |
++-----+----------+
+7 rows in set (0.00 sec)
+
+mysql> insert into inv_user values('johnclain@gmail.com','John','Clain$John','2023-10-13 12:12:00','admin');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into inv_user values('riaadam@gmail.com','Adam','$Aclarka12','2013-11-11 15:10:50','admin');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into inv_user values('tonyamara@gmail.com','Tony','Ama2#ra','2011-11-
+13 14:10:20','manager');
+Query OK, 1 row affected (0.00 sec)
+
+
+mysql> select * from inv_user;
++---------------------+------+------------+---------------------+-----------+
+| user_id             | name | psw        | last_login          | user_type |
++---------------------+------+------------+---------------------+-----------+
+| johnclain@gmail.com | John | Clain$John | 2023-10-13 12:12:00 | admin     |
+| riaadam@gmail.com   | Adam | $Aclarka12 | 2013-11-11 15:10:50 | admin     |
+| tonyamara@gmail.com | Tony | Ama2#ra    | 2011-11-13 14:10:20 | manager   |
++---------------------+------+------------+---------------------+-----------+
+3 rows in set (0.00 sec)
+
+
+
+
+mysql> insert into categories values('1','Food');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into categories values('2','Medicine');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into categories values('3','Alocohol');
+Query OK, 1 row affected (0.00 sec)
+
+
+mysql> select * from categories;
++-----+---------------+
+| cid | category_name |
++-----+---------------+
+|   1 | Food          |
+|   2 | Medicine      |
+|   3 | Alocohol      |
++-----+---------------+
+3 rows in set (0.00 sec)
+
+
+mysql> insert into stores values(1,'Tony Stone','San Jose',2089724561);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into stores values(2,'Steve Arse','Seattle',2031657329);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into stores values(3,'Ting Lio','New Jersey',2016937825);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into stores values(4,'Aditi Ram','New York',2083933851);
+Query OK, 1 row affected (0.01 sec)
+
+
+mysql> select * from stores;
++-----+------------+------------+------------+
+| sid | sname      | address    | mob_num    |
++-----+------------+------------+------------+
+|   1 | Tony Stone | San Jose   | 2089724561 |
+|   2 | Steve Arse | Seattle    | 2031657329 |
+|   3 | Ting Lio   | New Jersey | 2016937825 |
+|   4 | Aditi Ram  | New York   | 2083933851 |
++-----+------------+------------+------------+
+4 rows in set (0.00 sec)
+
+
+insert into product values(1,1,6,1,'Donuts',13,6,'2023-11-12');
+Query OK, 1 row affected (0.00 sec)
+
+insert into product values(2,1,5,1,'Bagel',11,4,'2023-11-11');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into product values(3,1,7,1,'Chocolate',32,8,'2023-10-11');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into product values(4,2,7,1,'Aspirin',5,5,'2023-11-12');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into product values(5,2,5,1,'Dextrose',23,2,'2023-4-11');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into product values(6,3,6,1,'Beer',30,3,'2023-11-5');
+Query OK, 1 row affected (0.00 sec)
+
+
+mysql> select * from product;
++-----+------+------+------+-----------+---------+-------+------------+
+| pid | cid  | bid  | sid  | pname     | p_stock | price | added_date |
++-----+------+------+------+-----------+---------+-------+------------+
+|   1 |    1 |    6 |    1 | Donuts    |      13 |     6 | 2023-11-12 |
+|   2 |    1 |    5 |    1 | Bagel     |      11 |     4 | 2023-11-11 |
+|   3 |    1 |    7 |    1 | Chocolate |      32 |     8 | 2023-10-11 |
+|   4 |    2 |    7 |    1 | Aspirin   |       5 |     5 | 2023-11-12 |
+|   5 |    2 |    5 |    1 | Dextrose  |      23 |     2 | 2023-04-11 |
+|   6 |    3 |    6 |    1 | Beer      |      30 |     3 | 2023-11-05 |
++-----+------+------+------+-----------+---------+-------+------------+
+6 rows in set (0.00 sec)
+
+
+
+mysql> insert into provides values(1,2,10);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into provides values(2,1,5);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into provides values(3,3,15);
+Query OK, 1 row affected (0.00 sec)
+
++------+------+----------+
+| bid  | sid  | discount |
++------+------+----------+
+|    1 |    2 |       10 |
+|    2 |    1 |        5 |
+|    3 |    3 |       15 |
++------+------+----------+
+3 rows in set (0.01 sec)
+
+
+mysql> insert into cart values(1,'Adil',407687451);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into cart values(2,'Pheobe',907863012);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into cart values(3,'Vijay',907863289);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from cart;
++---------+--------+-----------+
+| cust_id | name   | mob_num   |
++---------+--------+-----------+
+|       1 | Adil   | 407687451 |
+|       2 | Pheobe | 907863012 |
+|       3 | Vijay  | 907863289 |
++---------+--------+-----------+
+3 rows in set (0.00 sec)
+
+
+mysql> insert into select_prod values(1,1,3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into select_prod values(2,3,1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into select_prod values(3,1,5);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into select_prod values(4,5,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from select_prod;
++---------+------+----------+
+| cust_id | pid  | quantity |
++---------+------+----------+
+|       1 |    1 |        3 |
+|       2 |    3 |        1 |
+|       3 |    1 |        5 |
+|       4 |    5 |       10 |
++---------+------+----------+
+4 rows in set (0.00 sec)
+
