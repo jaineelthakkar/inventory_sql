@@ -1,0 +1,246 @@
+
+
+INNER JOIN
+
+mysql> select product.pid, product.pname, brand.bname from product INNER JOIN brand on product.bid = brand.bid;
++-----+-----------+---------+
+| pid | pname     | bname   |
++-----+-----------+---------+
+|   1 | Donuts    | Costco  |
+|   2 | Bagel     | Amazon  |
+|   3 | Chocolate | Walmart |
+|   4 | Aspirin   | Walmart |
+|   5 | Dextrose  | Amazon  |
+|   6 | Beer      | Costco  |
+|   7 | Beer      | Costco  |
+|   8 | Chips     | Costco  |
++-----+-----------+---------+
+8 rows in set (0.03 sec)
+
+LEFT JOIN
+
+mysql> select product.pid, product.pname, COALESCE(brand.bname, 'N/A') as bname from Product LEFT JO
+IN Brand ON Product.bid = Brand.bid;
++-----+-----------+---------+
+| pid | pname     | bname   |
++-----+-----------+---------+
+|   1 | Donuts    | Costco  |
+|   2 | Bagel     | Amazon  |
+|   3 | Chocolate | Walmart |
+|   4 | Aspirin   | Walmart |
+|   5 | Dextrose  | Amazon  |
+|   6 | Beer      | Costco  |
+|   7 | Beer      | Costco  |
+|   8 | Chips     | Costco  |
++-----+-----------+---------+
+8 rows in set (0.00 sec)
+
+
+VIEW
+
+create view inventory_of_products as 
+	->select product.pid, product.pname, sum(product.p_stock)
+	->as total_quantity, SUM(product.price) AS total_price 
+	->from product 
+	->group by product.pid, product.pname;
+Query OK, 0 rows affected (0.03 sec)
+
+Select * from inventory_of_products;
++-----+-----------+----------------+-------------+
+| pid | pname     | total_quantity | total_price |
++-----+-----------+----------------+-------------+
+|   1 | Donuts    |             13 |           6 |
+|   2 | Bagel     |             11 |           4 |
+|   3 | Chocolate |             32 |           8 |
+|   4 | Aspirin   |              5 |           5 |
+|   5 | Dextrose  |             23 |           2 |
+|   6 | Beer      |             30 |           3 |
+|   7 | Beer      |             30 |           3 |
+|   8 | Chips     |             30 |           3 |
++-----+-----------+----------------+-------------+
+8 rows in set (0.02 sec)
+
+
+INNER JOIN WITH MULTIPLE TABLES
+
+mysql> Select product.pid, product.pname, brand.bname, categories.category_name
+    -> from product
+    -> INNER JOIN brand ON product.bid = brand.bid
+    -> INNER JOIN categories ON product.cid = categories.cid;
++-----+-----------+---------+---------------+
+| pid | pname     | bname   | category_name |
++-----+-----------+---------+---------------+
+|   1 | Donuts    | Costco  | Food          |
+|   2 | Bagel     | Amazon  | Food          |
+|   3 | Chocolate | Walmart | Food          |
+|   4 | Aspirin   | Walmart | Medicine      |
+|   5 | Dextrose  | Amazon  | Medicine      |
+|   6 | Beer      | Costco  | Alocohol      |
+|   7 | Beer      | Costco  | Alocohol      |
+|   8 | Chips     | Costco  | Alocohol      |
++-----+-----------+---------+---------------+
+8 rows in set (0.00 sec)
+
+
+SUB QUERY
+
+mysql> Select pid, pname, p_stock
+    -> From product
+    -> Where p_stock > (select AVG(p_stock) from product);
++-----+-----------+---------+
+| pid | pname     | p_stock |
++-----+-----------+---------+
+|   3 | Chocolate |      32 |
+|   5 | Dextrose  |      23 |
+|   6 | Beer      |      30 |
+|   7 | Beer      |      30 |
+|   8 | Chips     |      30 |
++-----+-----------+---------+
+5 rows in set (0.01 sec)
+
+
+Retrieve all products along with their corresponding brand names and the total quantity available across all stores:
+
+
+mysql> SELECT P.pid, P.pname, B.bname, SUM(PR.quantity) AS total_quantity
+    -> FROM Product AS P
+    -> INNER JOIN brand AS B ON P.bid = B.bid
+    -> LEFT JOIN select_prod AS PR ON P.pid = PR.pid
+    -> GROUP BY P.pid, P.pname, B.bname;
++-----+-----------+---------+----------------+
+| pid | pname     | bname   | total_quantity |
++-----+-----------+---------+----------------+
+|   1 | Donuts    | Costco  |              8 |
+|   2 | Bagel     | Amazon  |           NULL |
+|   3 | Chocolate | Walmart |              1 |
+|   4 | Aspirin   | Walmart |           NULL |
+|   5 | Dextrose  | Amazon  |             10 |
+|   6 | Beer      | Costco  |           NULL |
+|   7 | Beer      | Costco  |           NULL |
+|   8 | Chips     | Costco  |           NULL |
++-----+-----------+---------+----------------+
+8 rows in set (0.01 sec)
+
+Retrieve all products and their corresponding categories that are currently out of stock:
+
+SELECT P.pid, P.pname, C.category_name FROM Product AS P INNER JOIN Categories AS C ON P.cid
+= C.cid WHERE P.p_stock = 0;
+Empty set (0.00 sec)
+
+Retrieve the average price of products in each category:
+
+mysql> SELECT C.cid, C.category_name, AVG(P.price) AS average_price
+    -> FROM Categories AS C
+    -> INNER JOIN Product AS P ON C.cid = P.cid
+    -> GROUP BY C.cid, C.category_name;
++-----+---------------+---------------+
+| cid | category_name | average_price |
++-----+---------------+---------------+
+|   1 | Food          |        6.0000 |
+|   2 | Medicine      |        3.5000 |
+|   3 | Alocohol      |        3.0000 |
++-----+---------------+---------------+
+3 rows in set (0.00 sec)
+
+
+Retrieve the total revenue generated by a brand:
+
+mysql> SELECT B.bid, B.bname, SUM(T.total_amount) AS total_revenue
+    -> FROM Brand AS B
+    -> INNER JOIN Product AS P ON B.bid = P.bid
+    -> INNER JOIN Invoice AS I ON P.pid = I.pid
+    -> INNER JOIN Transaction AS T ON I.transaction_id = T.id
+    -> GROUP BY B.bid, B.bname;
++-----+--------+---------------+
+| bid | bname  | total_revenue |
++-----+--------+---------------+
+|   6 | Costco |         20000 |
++-----+--------+---------------+
+1 row in set (0.00 sec)
+
+Calculate the total value of inventory by multiplying quantity and price for each product in the product table:
+
+mysql> SELECT pname, p_stock * price AS total_value
+    -> FROM product;
++-----------+-------------+
+| pname     | total_value |
++-----------+-------------+
+| Donuts    |          78 |
+| Bagel     |          44 |
+| Chocolate |         256 |
+| Aspirin   |          25 |
+| Dextrose  |          46 |
+| Beer      |          90 |
+| Beer      |          90 |
+| Chips     |          90 |
++-----------+-------------+
+8 rows in set (0.00 sec)
+
+
+Retrieve the top 3 best-selling products based on the total quantity sold from the invoice table:
+
+mysql> SELECT p.pname, SUM(p_stock) AS total_sold
+    -> FROM invoice i
+    -> INNER JOIN product p ON i.pid = p.pid
+    -> GROUP BY p.pid
+    -> ORDER BY total_sold DESC
+    -> LIMIT 3;
++----------+------------+
+| pname    | total_sold |
++----------+------------+
+| Donuts   |         26 |
+| Dextrose |         23 |
+| Aspirin  |          5 |
++----------+------------+
+3 rows in set (0.01 sec)
+
+Calculate the average price of products in each category from the product and categories tables:
+
+
+mysql> SELECT c.category_name, AVG(p.price) AS average_price
+    -> FROM product p
+    -> INNER JOIN categories c ON p.cid = c.cid
+    -> GROUP BY c.category_name;
++---------------+---------------+
+| category_name | average_price |
++---------------+---------------+
+| Food          |        6.0000 |
+| Medicine      |        3.5000 |
+| Alocohol      |        3.0000 |
++---------------+---------------+
+3 rows in set (0.01 sec)
+
+Update the price of a specific product in the product table by a certain percentage:
+
+ UPDATE product SET price = price * 1.1 WHERE pid = 1;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from product;
++-----+------+------+------+-----------+---------+-------+------------+
+| pid | cid  | bid  | sid  | pname     | p_stock | price | added_date |
++-----+------+------+------+-----------+---------+-------+------------+
+|   1 |    1 |    6 |    1 | Donuts    |      13 |     7 | 2023-11-12 |
+|   2 |    1 |    5 |    1 | Bagel     |      11 |     4 | 2023-11-11 |
+|   3 |    1 |    7 |    1 | Chocolate |      32 |     8 | 2023-10-11 |
+|   4 |    2 |    7 |    1 | Aspirin   |       5 |     5 | 2023-11-12 |
+|   5 |    2 |    5 |    1 | Dextrose  |      23 |     2 | 2023-04-11 |
+|   6 |    3 |    6 |    1 | Beer      |      30 |     3 | 2023-11-05 |
+|   7 |    3 |    6 |    2 | Beer      |      30 |     3 | 2023-11-05 |
+|   8 |    3 |    6 |    3 | Chips     |      30 |     3 | 2023-11-05 |
++-----+------+------+------+-----------+---------+-------+------------+
+8 rows in set (0.00 sec)
+
+Retrieve the list of products that have a quantity below the average quantity in the product table:
+
+
+mysql> SELECT * FROM product WHERE p_stock < (SELECT AVG(p_stock) FROM product);
++-----+------+------+------+---------+---------+-------+------------+
+| pid | cid  | bid  | sid  | pname   | p_stock | price | added_date |
++-----+------+------+------+---------+---------+-------+------------+
+|   1 |    1 |    6 |    1 | Donuts  |      13 |     7 | 2023-11-12 |
+|   2 |    1 |    5 |    1 | Bagel   |      11 |     4 | 2023-11-11 |
+|   4 |    2 |    7 |    1 | Aspirin |       5 |     5 | 2023-11-12 |
++-----+------+------+------+---------+---------+-------+------------+
+3 rows in set (0.01 sec)
+
