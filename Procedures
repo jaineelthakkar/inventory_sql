@@ -5,13 +5,16 @@ PROCEDURES
 * Updating product price procedure
 
 DECLARATION
+This procedure updates the price of a product in the product table based on a percentage increase:
 mysql> CREATE PROCEDURE UpdatePrice(IN pid INT, IN percentageIncrease DECIMAL(5,2))
     -> BEGIN
     ->     UPDATE product
     ->     SET price = price * (1 + percentageIncrease/100)
     ->     WHERE pid = pid;
-    -> END //
+    -> END 
 Query OK, 0 rows affected (0.00 sec)
+
+This stored procedure takes two parameters: pid specifies the ID of the product for which you want to update the price, and percentageIncrease indicates the percentage by which you want to increase the price.
 
 CALLING THE PROCEDURE
 mysql> CALL UpdatePrice(1, 10.0);
@@ -38,18 +41,28 @@ mysql> select * from product;
 
 * Updating product quantity procedure
 
+This procedure updates the quantity of a specific product by adding or subtracting a given quantity value.
+
 DECLARATION
 CREATE PROCEDURE UpdateProductStock(
-    IN pid INT,
+    IN p_id INT,
     IN quantityChange INT
 )
 BEGIN
     UPDATE product
     SET p_stock = p_stock + quantityChange
-    WHERE pid = pid;
+    WHERE p_id = pid;
 END
 
 Query OK, 0 rows affected (0.00 sec)
+
+In this procedure:
+
+UpdateProductQuantity is the name of the procedure.
+pid is the input parameter representing the product ID.
+quantityChange is the input parameter representing the value by which the quantity should be updated.
+The UPDATE statement updates the quantity column of the product table by adding or subtracting the quantityChange value.
+The WHERE clause ensures that only the row corresponding to the specified pid is updated.
 
 CALLING THE PROCEDURE
 mysql> CALL UpdateProductStock(1, 5);
@@ -75,6 +88,9 @@ mysql> select * from product;
 
 * Get product needed to restock procedure
 
+
+This procedure retrieves the list of products that need to be restocked based on a specified threshold quantity.
+
 DECLARATION
 
 mysql> CREATE PROCEDURE GetProductsToRestock(
@@ -86,6 +102,13 @@ mysql> CREATE PROCEDURE GetProductsToRestock(
     ->     WHERE p_stock <= thresholdQuantity;
     -> END
 Query OK, 0 rows affected (0.00 sec)
+
+In this procedure:
+
+GetProductsToRestock is the name of the procedure.
+thresholdQuantity is the input parameter representing the threshold quantity below which products are considered to be in need of restocking.
+The SELECT statement retrieves the product ID, product name, and stock from the product table.
+The WHERE clause filters the products to only include those with a stock less than or equal to the specified thresholdQuantity.
 
 CALLING THE PROCEDURE AND VALIDATION
 
