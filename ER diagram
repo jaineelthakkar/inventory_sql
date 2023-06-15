@@ -33,7 +33,7 @@ Schema:
 
     Provides table:
       bid (Foreign Key referencing Brand table)
-      store_id (Foreign Key referencing Stores table)
+      sid (Foreign Key referencing Stores table)
       discount
 
     Cart table:
@@ -53,7 +53,7 @@ Schema:
       due
       discount
       method
-      cart_id (Foreign Key referencing Inv_user table)
+      cust_id (Foreign Key referencing Cart table)
       sid (Foreign Key referencing Stores table)
 
     Invoice table:
