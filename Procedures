@@ -1,0 +1,100 @@
+
+
+PROCEDURES
+
+* Updating product price procedure
+
+DECLARATION
+mysql> CREATE PROCEDURE UpdatePrice(IN pid INT, IN percentageIncrease DECIMAL(5,2))
+    -> BEGIN
+    ->     UPDATE product
+    ->     SET price = price * (1 + percentageIncrease/100)
+    ->     WHERE pid = pid;
+    -> END //
+Query OK, 0 rows affected (0.00 sec)
+
+CALLING THE PROCEDURE
+mysql> CALL UpdatePrice(1, 10.0);
+Query OK, 3 rows affected (0.00 sec)
+
+
+VALIDATION
+mysql> select * from product;
++-----+------+------+------+-----------+---------+-------+------------+
+| pid | cid  | bid  | sid  | pname     | p_stock | price | added_date |
++-----+------+------+------+-----------+---------+-------+------------+
+|   1 |    1 |    6 |    1 | Donuts    |      13 |     8 | 2023-11-12 |
+|   2 |    1 |    5 |    1 | Bagel     |      11 |     4 | 2023-11-11 |
+|   3 |    1 |    7 |    1 | Chocolate |      32 |     9 | 2023-10-11 |
+|   4 |    2 |    7 |    1 | Aspirin   |       5 |     6 | 2023-11-12 |
+|   5 |    2 |    5 |    1 | Dextrose  |      23 |     2 | 2023-04-11 |
+|   6 |    3 |    6 |    1 | Beer      |      30 |     3 | 2023-11-05 |
+|   7 |    3 |    6 |    2 | Beer      |      30 |     3 | 2023-11-05 |
+|   8 |    3 |    6 |    3 | Chips     |      30 |     3 | 2023-11-05 |
++-----+------+------+------+-----------+---------+-------+------------+
+8 rows in set (0.00 sec)
+
+
+
+* Updating product quantity procedure
+
+DECLARATION
+CREATE PROCEDURE UpdateProductStock(
+    IN pid INT,
+    IN quantityChange INT
+)
+BEGIN
+    UPDATE product
+    SET p_stock = p_stock + quantityChange
+    WHERE pid = pid;
+END
+
+Query OK, 0 rows affected (0.00 sec)
+
+CALLING THE PROCEDURE
+mysql> CALL UpdateProductStock(1, 5);
+Query OK, 8 rows affected (0.01 sec)
+
+
+VALIDATION
+mysql> select * from product;
++-----+------+------+------+-----------+---------+-------+------------+
+| pid | cid  | bid  | sid  | pname     | p_stock | price | added_date |
++-----+------+------+------+-----------+---------+-------+------------+
+|   1 |    1 |    6 |    1 | Donuts    |      18 |     8 | 2023-11-12 |
+|   2 |    1 |    5 |    1 | Bagel     |      16 |     4 | 2023-11-11 |
+|   3 |    1 |    7 |    1 | Chocolate |      37 |     9 | 2023-10-11 |
+|   4 |    2 |    7 |    1 | Aspirin   |      10 |     6 | 2023-11-12 |
+|   5 |    2 |    5 |    1 | Dextrose  |      28 |     2 | 2023-04-11 |
+|   6 |    3 |    6 |    1 | Beer      |      35 |     3 | 2023-11-05 |
+|   7 |    3 |    6 |    2 | Beer      |      35 |     3 | 2023-11-05 |
+|   8 |    3 |    6 |    3 | Chips     |      35 |     3 | 2023-11-05 |
++-----+------+------+------+-----------+---------+-------+------------+
+8 rows in set (0.00 sec)
+
+
+* Get product needed to restock procedure
+
+DECLARATION
+
+mysql> CREATE PROCEDURE GetProductsToRestock(
+    ->     IN thresholdQuantity INT
+    -> )
+    -> BEGIN
+    ->     SELECT pid, pname, p_stock
+    ->     FROM product
+    ->     WHERE p_stock <= thresholdQuantity;
+    -> END
+Query OK, 0 rows affected (0.00 sec)
+
+CALLING THE PROCEDURE AND VALIDATION
+
+mysql> CALL GetProductsToRestock(10);
++-----+---------+---------+
+| pid | pname   | p_stock |
++-----+---------+---------+
+|   4 | Aspirin |      10 |
++-----+---------+---------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
