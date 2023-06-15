@@ -1,0 +1,76 @@
+Schema:
+  Entities:
+    Brand table:
+      bid (Primary Key)
+      bname
+
+    Inv_user table:
+      user_id (Primary Key)
+      name
+      psw
+      last_login
+      user_type
+
+    Categories table:
+      cid (Primary Key)
+      category_name
+
+    Product table:
+      pid (Primary Key)
+      pname
+      bid (Foreign Key referencing Brand table)
+      cid (Foreign Key referencing Categories table)
+      sid (Foreign Key referencing Stores table)
+      p_stock
+      price
+      added_date
+
+    Stores table:
+      sid (Primary Key)
+      sname
+      address
+      mob_num
+
+    Provides table:
+      bid (Foreign Key referencing Brand table)
+      store_id (Foreign Key referencing Stores table)
+      discount
+
+    Cart table:
+      cust_id (Primary Key)
+      name
+      mob_num
+
+    Select_prod table:
+      cust_id (Foreign Key referencing Cart table)
+      product_id (Foreign Key referencing Product table)
+      quantity
+
+    Transaction table:
+      id (Primary Key)
+      total_amount
+      paid
+      due
+      discount
+      method
+      cart_id (Foreign Key referencing Inv_user table)
+      store_id (Foreign Key referencing Stores table)
+
+    Invoice table:
+      item_no
+      net_price
+      transaction_id (Foreign Key referencing Transaction table)
+      product_id (Foreign Key referencing Product table)
+      quantity
+      discount
+      
+  Relationships:
+    A brand can have multiple products (1 to many relationship).
+    A user can have multiple transactions (1 to many relationship).
+    A store can have multiple transactions (1 to many relationship).
+    A product can be associated with multiple transactions through the invoice table (1 to many relationship).
+    A brand can provide products to multiple stores (many to many relationship).
+    A user can have multiple products in their cart (1 to many relationship).
+    A transaction can have multiple products in the invoice (1 to many relationship).
+
+
