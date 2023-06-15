@@ -2,12 +2,11 @@
 
 INNER JOIN
 
-mysql>
-```sql
-	select product.pid, product.pname, brand.bname 
-	from product 
-	INNER JOIN brand on product.bid = brand.bid;
-```
+mysql>select product.pid, product.pname, brand.bname 
+from product 
+INNER JOIN brand on product.bid = brand.bid;
+
+
 +-----+-----------+---------+
 | pid | pname     | bname   |
 +-----+-----------+---------+
