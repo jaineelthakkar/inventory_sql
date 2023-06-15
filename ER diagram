@@ -43,7 +43,7 @@ Schema:
 
     Select_prod table:
       cust_id (Foreign Key referencing Cart table)
-      product_id (Foreign Key referencing Product table)
+      pid (Foreign Key referencing Product table)
       quantity
 
     Transaction table:
@@ -54,13 +54,13 @@ Schema:
       discount
       method
       cart_id (Foreign Key referencing Inv_user table)
-      store_id (Foreign Key referencing Stores table)
+      sid (Foreign Key referencing Stores table)
 
     Invoice table:
       item_no
       net_price
-      transaction_id (Foreign Key referencing Transaction table)
-      product_id (Foreign Key referencing Product table)
+      tid (Foreign Key referencing Transaction table)
+      pid (Foreign Key referencing Product table)
       quantity
       discount
       
