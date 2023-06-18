@@ -16,6 +16,7 @@ Executive Summary
       The successful implementation of the inventory management system highlights its potential to streamline inventory operations, reduce costs, and improve overall organizational efficiency. It is recommended that organizations consider adopting this system to effectively manage their inventory and stay competitive in today's dynamic business environment.
 
 Key Objectives and Deliverables
+
       1.Develop a user-friendly inventory management system: The primary objective of the project is to create an intuitive and user-friendly software solution that simplifies inventory management tasks and provides an efficient user experience.
       2.Automate inventory tracking processes: Implement automated processes for tracking inventory levels, product movements, and stock updates to eliminate manual data entry and minimize errors.
       3.Optimize stock control and replenishment: Enable real-time monitoring of inventory levels and establish automated alerts and notifications for timely stock replenishment, avoiding stockouts or overstocking situations.
@@ -26,6 +27,7 @@ Key Objectives and Deliverables
       8.Ensure data integrity and security: Implement robust data storage mechanisms, backup procedures, and security measures to safeguard inventory data from unauthorized access, loss, or corruption.
 
 Summary of Key Findings and Achievements
+
       Throughout the course of the inventory management system project, several significant findings and achievements were identified. These findings shed light on the system's effectiveness and its impact on inventory management within organizations. The achievements highlight the successful implementation of key functionalities and the benefits derived from the system. The following summarizes the key findings and achievements:
       1.Improved Efficiency and Accuracy
       2.Real-time Inventory Visibility
@@ -35,12 +37,14 @@ Summary of Key Findings and Achievements
       6.User-Friendly Interface
 
 Introduction
+
       The inventory management system project aims to address the challenges faced by organizations in effectively managing their inventory. Inventory management plays a crucial role in ensuring smooth operations, minimizing costs, and meeting customer demands. However, manual inventory tracking methods and outdated systems often lead to inefficiencies, errors, and poor decision-making.
       The purpose of this project is to develop a robust and user-friendly software solution that automates and streamlines inventory management processes. The system will enable organizations to accurately track inventory levels, manage product information, handle purchase orders, and generate insightful reports. By implementing this system, organizations can optimize their inventory control, reduce stock discrepancies, and make informed decisions regarding stock replenishment, sales management, and overall operational efficiency.
       The project will follow a systematic approach, starting with requirements gathering and analysis to understand the specific needs of organizations in managing their inventory. This will involve conducting interviews with stakeholders, studying existing systems, and analyzing industry best practices. The gathered requirements will form the basis for designing an efficient system architecture that meets the identified needs.
       The developed system will utilize modern technologies and programming languages such as MySQL for data storage, PHP for server-side scripting, and HTML/CSS for the user interface. The user interface will be designed to be intuitive and user-friendly, allowing users of varying technical backgrounds to navigate the system effortlessly. Emphasis will be placed on ensuring data integrity, security, and scalability to accommodate future growth and changing business needs.
 
 Literature Review
+
       Effective inventory management is a critical component of business operations, and extensive research has been conducted to understand the best practices and strategies in this field. The literature review for the inventory management system project explores key studies, scholarly articles, and industry reports that shed light on various aspects of inventory management and the benefits of implementing an automated system.
       1.Inventory Management Techniques:
       The literature highlights various inventory management techniques, including just-in-time (JIT), economic order quantity (EOQ), and ABC analysis. These techniques help organizations optimize inventory levels, reduce holding costs, and improve overall efficiency (Datta et al., 2020).
@@ -50,6 +54,7 @@ Literature Review
       Studies highlight the role of technology, such as barcode scanning, RFID, and cloud computing, in automating inventory management processes. These technologies improve data accuracy, streamline operations, and enable real-time tracking (Shad et al., 2018).
 
 Methodology
+
       The inventory management system project followed a systematic methodology to ensure the successful development and implementation of the system. The methodology encompassed various stages, including requirements gathering, system design, implementation, testing, and deployment. The following outlines the key steps involved in the methodology:
 
       1.Requirements Gathering:
